@@ -3,10 +3,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: {
-    "hello-world": "./src/hello-world.js",
-    books: "./src/books.js",
-  },
+  entry: "./src/index.js",
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "./dist"),
@@ -14,7 +11,7 @@ module.exports = {
   },
   mode: "development",
   devServer: {
-    port: 8080,
+    port: 9000,
     static: {
       directory: path.resolve(__dirname, "./dist"),
     },
@@ -30,16 +27,19 @@ module.exports = {
         type: "asset",
         parser: {
           dataUrlCondition: {
-            maxSize: 3 * 1024, // 3 kilobytes
+            maxSize: 3 * 1024,
           },
         },
+      },
+      {
+        test: /\.txt/,
+        type: "asset/source",
       },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
       {
-        //Sass loader
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
       },
@@ -49,7 +49,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env"],
+            presets: ["@babel/env"],
             plugins: ["@babel/plugin-proposal-class-properties"],
           },
         },
@@ -61,25 +61,11 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [
-        "**/*",
-        path.join(process.cwd(), "build/**/*"),
-      ],
-    }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      filename: "hello-world.html",
-      chunks: ["hello-world"],
-      title: "Hello World",
-      template: "./src/page-template.hbs",
-      description: "This is a description",
-    }),
-    new HtmlWebpackPlugin({
-      filename: "books.html",
-      chunks: ["books"],
-      title: "Books page",
-      template: "./src/page-template.hbs",
-      description: "Books page",
+      title: "Hello world",
+      description: "Hello world",
+      template: "src/page-template.hbs",
     }),
   ],
 };

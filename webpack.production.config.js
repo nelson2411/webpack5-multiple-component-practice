@@ -4,20 +4,18 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: {
-    "hello-world": "./src/hello-world.js",
-    books: "./src/books.js",
-  },
+  entry: "./src/index.js",
   output: {
-    filename: "[name].[contenthash].js",
+    filename: "bundle.[contenthash].js",
     path: path.resolve(__dirname, "./dist"),
-    publicPath: "",
+    publicPath: "/static/",
   },
   mode: "production",
   optimization: {
     splitChunks: {
       chunks: "all",
-      minSize: 3000,
+      minSize: 10000,
+      automaticNameDelimiter: "_",
     },
   },
   module: {
@@ -27,16 +25,19 @@ module.exports = {
         type: "asset",
         parser: {
           dataUrlCondition: {
-            maxSize: 3 * 1024, // 3 kilobytes
+            maxSize: 3 * 1024,
           },
         },
+      },
+      {
+        test: /\.txt/,
+        type: "asset/source",
       },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
-        //Sass loader
         test: /\.scss$/,
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
@@ -46,7 +47,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env"],
+            presets: ["@babel/env"],
             plugins: ["@babel/plugin-proposal-class-properties"],
           },
         },
@@ -59,29 +60,13 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].[contenthash].css",
+      filename: "styles.[contenthash].css",
     }),
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [
-        "**/*",
-        path.join(process.cwd(), "build/**/*"),
-      ],
-    }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      filename: "hello-world.html",
-      chunks: ["hello-world"],
-      title: "Hello World",
-      template: "./src/page-template.hbs",
-      description: "This is a description",
-      minify: false,
-    }),
-    new HtmlWebpackPlugin({
-      filename: "books.html",
-      chunks: ["books"],
-      title: "books page",
-      template: "./src/page-template.hbs",
-      description: "this is the books page",
-      minify: false,
+      title: "Hello world",
+      description: "Hello world",
+      template: "src/page-template.hbs",
     }),
   ],
 };
