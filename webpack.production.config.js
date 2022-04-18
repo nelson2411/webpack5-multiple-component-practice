@@ -11,7 +11,7 @@ module.exports = {
   output: {
     filename: "[name].[contenthash].js",
     path: path.resolve(__dirname, "./dist"),
-    publicPath: "",
+    publicPath: "/static/",
   },
   mode: "production",
   optimization: {
@@ -73,7 +73,6 @@ module.exports = {
       title: "Hello World",
       template: "./src/page-template.hbs",
       description: "This is a description",
-      minify: false,
     }),
     new HtmlWebpackPlugin({
       filename: "books.html",
@@ -81,7 +80,6 @@ module.exports = {
       title: "books page",
       template: "./src/page-template.hbs",
       description: "this is the books page",
-      minify: false,
     }),
   ],
 };
